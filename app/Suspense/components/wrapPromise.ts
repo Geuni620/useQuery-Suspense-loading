@@ -2,6 +2,18 @@ function wrapPromise(promise: any) {
   let status = 'pending';
   let response: any;
 
+  console.log(
+    'promise 들어왔니?',
+    promise.then(
+      (res: any) => {
+        console.log('res', res);
+      },
+      (err: any) => {
+        console.log('err', err);
+      },
+    ),
+  );
+
   const suspender = promise.then(
     (res: any) => {
       status = 'success';
@@ -14,6 +26,7 @@ function wrapPromise(promise: any) {
   );
 
   const read = () => {
+    console.log('status', status);
     switch (status) {
       case 'pending':
         throw suspender;

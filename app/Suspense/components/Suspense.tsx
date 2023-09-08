@@ -10,9 +10,9 @@ interface SuspenseState {
   error?: any;
 }
 
-function isPromise(i: any): i is Promise<any> {
-  console.log('i', i);
-  return i && typeof i.then === 'function';
+function isPromise(promise: any): promise is Promise<any> {
+  console.log('promise가 맞나요???');
+  return promise && typeof promise.then === 'function';
 }
 
 export default class Suspense extends React.Component<
@@ -23,12 +23,38 @@ export default class Suspense extends React.Component<
     pending: false,
   };
 
+  // public componentDidCatch(catchedPromise: any) {
+  //   console.log('catchedPromise', catchedPromise);
+  //   if (isPromise(catchedPromise)) {
+  //     this.setState({ pending: true });
+
+  //     catchedPromise
+  //       .then(() => {
+  //         this.setState({ pending: false });
+  //       })
+  //       .catch((err) => {
+  //         this.setState({ error: err || new Error('Suspense Error') });
+  //       });
+  //   } else {
+  //     throw catchedPromise;
+  //   }
+  // }
+
+  static getDerivedStateFromError(error: any) {
+    console.log('getDerivedStateFromError error', error);
+    if (isPromise(error)) {
+      return { pending: true };
+    }
+    return { error };
+  }
+
   public componentDidCatch(catchedPromise: any) {
     if (isPromise(catchedPromise)) {
       this.setState({ pending: true });
 
       catchedPromise
         .then(() => {
+          console.log('여기 읽히니?');
           this.setState({ pending: false });
         })
         .catch((err) => {

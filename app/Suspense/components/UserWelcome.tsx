@@ -9,6 +9,8 @@ const resource = fetchData(
 const UserWelcome = () => {
   const userDetails = resource.read();
 
+  console.log('userDetails', userDetails);
+
   return (
     <div>
       <div>Fetch completed.</div>
